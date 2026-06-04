@@ -1,22 +1,12 @@
 [
     {
-        "website": "insta",
-        "username": "aks",
-        "password": "aks"
-    },
-    {
-        "website": "aha",
-        "username": "aha",
-        "password": "aha"
-    },
-    {
         "website": "fb",
-        "username": "pragya",
-        "password": "sdf"
+        "username": "username",
+        "password": "password"
     },
     {
-        "website": "link",
-        "username": "aks",
-        "password": "aa"
+        "website": "google",
+        "username": "prajun",
+        "password": "abcd"
     }
 ]

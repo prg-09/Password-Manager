@@ -37,7 +37,7 @@ def view():
         return
     else:
         for i, pw in enumerate(pws):
-            print (f'\n{i+1}. Website: {pw["website"]} | Password: {pw["password"]} ')
+            print (f'\n{i+1}. Website: {pw["website"]} | Username: {pw["username"]}')
         
 def search():
     search_key = input("Which web/app pw do you want to search? ").lower()
@@ -53,7 +53,40 @@ def search():
 
     if not found:
         print("Password not found") 
-         
+
+def edit():
+    
+    if not pws:
+        print("No pw stored")
+        return
+    view()
+    while True:
+        try:
+            edit_num = int(input("Enter the no of pw you want to edit: "))
+            if 1 <= edit_num <= len(pws):
+                pw = pws[edit_num - 1]
+                print("Press enter if you don't want to update")
+                new_website = input(f"Website(Current:{pw["website"]}): ")
+                new_username = input(f"Username(Current:{pw["username"]}): ")
+                
+                new_password = input(f"Passowrd: ")
+                if new_website :
+                    pw["website"] = new_website
+                
+                if new_username :
+                    pw["username"] = new_username
+                    
+                if new_password :
+                    pw["password"] = new_password
+           
+                dump_pws()
+                break
+            else:
+                print("Enter a valid integer")
+        except ValueError:
+            print("Enter an integer")    
+            
+     
 def delete():
     if not pws:
         print ("No pw available to delete")
@@ -61,16 +94,22 @@ def delete():
     while True:
         view()
         try:
+            
             delete_num = int(input("Enter the number of pw you want to delete: "))
-            pws.pop(delete_num-1)
-            break
+            if 1 <= delete_num <= len(pws): 
+                deleted = pws.pop(delete_num-1)
+                print(f"Succesfully deleted pw of {deleted['website']} ")
+                break
+            else:
+                print("Enter valid integer")
+            
         except ValueError:
-            print("\nEnter valid number")
+            print("\nEnter number")
     dump_pws()
     
 while True:
     try:
-        menu_chosen = int(input("\n------Menu------\n1.Add Password \n2.View Password \n3.Search Password \n4.Delete Password \n5.Exit\n"))
+        menu_chosen = int(input("\n------Menu------\n1.Add Password \n2.View Password \n3.Search Password \n4.Edit \n5.Delete Password \n6.Exit\n"))
         if menu_chosen == 1:
             add()
         elif menu_chosen == 2:
@@ -78,12 +117,14 @@ while True:
         elif menu_chosen == 3:
             search()
         elif menu_chosen == 4:
-            delete()
+            edit()
         elif menu_chosen == 5:
+            delete()
+        elif menu_chosen == 6:
             break
         else:
-            print("Please enter a valid number from 1 to 5")
+            print("Please enter a valid number from 1 to 6")
     except ValueError:
-        print ("Please enter a valid number from 1 to 5")
+        print ("Please enter a number from 1 to 6")
     
 
