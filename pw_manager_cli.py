@@ -2,6 +2,9 @@
 from getpass import getpass
 import json
 import os 
+import string
+import random
+
 
 pws = []
 
@@ -18,15 +21,35 @@ def dump_pws():
     with open ("pw.json","w") as f:
         json.dump(pws,f, indent= 4)
 
+def pw_generator(length = 10):
+    characters = (string.ascii_letters + string.punctuation + string.digits)
+    password = ""
+    for _ in range(length):
+        password += random.choice(characters)
+    return password
+
+
 def add():
     website = input("Website / App: ")
     username = input("Username: ")
-    password = getpass("Password: ")
+    while True:
+        choice = input("Do you want to generate password?(y/n): ")
+        
+        if choice.lower() == "y":
+            password = pw_generator()
+            break
+        elif choice.lower() == "n":
+            password = getpass("Password:")
+            break
+        else:
+            print("Please enter y or n")
+        
     pw = {
         "website": website,
         "username": username,
         "password": password
     }
+    
     pws.append(pw)
     dump_pws()
     
@@ -43,9 +66,11 @@ def search():
     search_key = input("Which web/app pw do you want to search? ").lower()
 
     found = False
-
+    
     for pw in pws:
-        if pw["website"].lower() == search_key:
+        
+        if search_key in pw["website"].lower():
+            print(f"Website: {pw['website']}")
             print(f"Username: {pw['username']}")
             print(f"Password: {pw['password']}")
             found = True

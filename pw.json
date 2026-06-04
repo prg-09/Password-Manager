@@ -8,5 +8,25 @@
         "website": "google",
         "username": "prajun",
         "password": "abcd"
+    },
+    {
+        "website": "insta",
+        "username": "pragya",
+        "password": "abc"
+    },
+    {
+        "website": "pinterest",
+        "username": "pragya",
+        "password": "I"
+    },
+    {
+        "website": "pylab",
+        "username": "pg",
+        "password": "D"
+    },
+    {
+        "website": "dijk",
+        "username": "k",
+        "password": "X.)U,kX"
     }
 ]
