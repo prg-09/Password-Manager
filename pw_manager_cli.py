@@ -4,7 +4,7 @@ import json
 import os 
 import string
 import random
-
+from cryptography.fernet import Fernet
 
 pws = []
 
@@ -26,6 +26,7 @@ def pw_generator(length = 10):
     password = ""
     for _ in range(length):
         password += random.choice(characters)
+    print(f"Generated pw is {password}")
     return password
 
 
@@ -43,11 +44,10 @@ def add():
             break
         else:
             print("Please enter y or n")
-        
     pw = {
         "website": website,
         "username": username,
-        "password": password
+        "password": encrypt_password(password)
     }
     
     pws.append(pw)
@@ -55,13 +55,14 @@ def add():
     
 
 def view():
+   
     if not pws:
         print ("No password stored to view")
         return
     else:
         for i, pw in enumerate(pws):
-            print (f'\n{i+1}. Website: {pw["website"]} | Username: {pw["username"]}')
-        
+            print (f'\n{i+1}. Website: {pw["website"]} | Username: {pw["username"]} ')
+    
 def search():
     search_key = input("Which web/app pw do you want to search? ").lower()
 
@@ -72,7 +73,8 @@ def search():
         if search_key in pw["website"].lower():
             print(f"Website: {pw['website']}")
             print(f"Username: {pw['username']}")
-            print(f"Password: {pw['password']}")
+            real_password = decrypt_password(pw["password"])
+            print(f"Password: {real_password}")
             found = True
             break
 
@@ -91,10 +93,10 @@ def edit():
             if 1 <= edit_num <= len(pws):
                 pw = pws[edit_num - 1]
                 print("Press enter if you don't want to update")
-                new_website = input(f"Website(Current:{pw["website"]}): ")
-                new_username = input(f"Username(Current:{pw["username"]}): ")
+                new_website = input(f"Website(Current:{pw['website']}): ")
+                new_username = input(f"Username(Current:{pw['username']}): ")
+                new_password = input(f"Password: ")
                 
-                new_password = input(f"Passowrd: ")
                 if new_website :
                     pw["website"] = new_website
                 
@@ -102,7 +104,7 @@ def edit():
                     pw["username"] = new_username
                     
                 if new_password :
-                    pw["password"] = new_password
+                    pw["password"] = encrypt_password(new_password)
            
                 dump_pws()
                 break
@@ -124,17 +126,41 @@ def delete():
             if 1 <= delete_num <= len(pws): 
                 deleted = pws.pop(delete_num-1)
                 print(f"Succesfully deleted pw of {deleted['website']} ")
+                dump_pws()
                 break
             else:
                 print("Enter valid integer")
-            
+
         except ValueError:
             print("\nEnter number")
-    dump_pws()
+
+def load_key():
+    if os.path.exists("key.key"):
+        with open("key.key", "rb") as f:
+            return f.read()
+    else:
+        key = Fernet.generate_key()
+        with open("key.key", "wb") as f:
+            f.write(key)
+        return key
+
+
+key = load_key()
+fer = Fernet(key)
+
+
+def encrypt_password(password):
+    encrypted_password = fer.encrypt(password.encode()).decode()
+    return encrypted_password
+
+
+def decrypt_password(encrypted_password):
+    decrypted_password = fer.decrypt(encrypted_password.encode()).decode()
+    return decrypted_password
     
 while True:
     try:
-        menu_chosen = int(input("\n------Menu------\n1.Add Password \n2.View Password \n3.Search Password \n4.Edit \n5.Delete Password \n6.Exit\n"))
+        menu_chosen = int(input("\n------Menu------\n1.Add Password \n2.View \n3.Search \n4.Edit \n5.Delete \n6.Exit\n"))
         if menu_chosen == 1:
             add()
         elif menu_chosen == 2:
