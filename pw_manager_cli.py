@@ -21,6 +21,7 @@ def dump_pws():
     with open ("pw.json","w") as f:
         json.dump(pws,f, indent= 4)
 
+
 def pw_generator(length = 10):
     characters = (string.ascii_letters + string.punctuation + string.digits)
     password = ""
@@ -29,6 +30,31 @@ def pw_generator(length = 10):
     print(f"Generated pw is {password}")
     return password
 
+
+def pw_strength_checker(password):
+    while True:
+        special_chars = string.punctuation
+        has_uppercase = any(char.isupper() for char in password)
+        has_lowercase  = any (char.islower() for char in password)
+        has_digit = any(char.isdigit() for char in password) 
+        has_symbol = any(char in special_chars for char in password)
+        has_min_length = len(password) >= 10
+        rules = [has_uppercase,has_lowercase,has_digit,has_symbol, has_min_length]
+        
+        score = sum(rules)
+        
+        if all(rules):
+            print("Strong Password")
+            break
+        elif score >= 3:
+            print ("Moderate Password")
+            break
+        else:
+            print("Weak Password")
+            password = getpass("Please enter strong password:")
+            
+    return password
+        
 
 def add():
     website = input("Website / App: ")
@@ -41,7 +67,7 @@ def add():
             break
         elif choice.lower() == "n":
             password = getpass("Password:")
-            pw_strength_checker(password)
+            password = pw_strength_checker(password)
             
             break
         else:
@@ -55,6 +81,7 @@ def add():
     pws.append(pw)
     dump_pws()
 
+
 def view():
    
     if not pws:
@@ -63,6 +90,7 @@ def view():
     else:
         for i, pw in enumerate(pws):
             print (f'\n{i+1}. Website: {pw["website"]} | Username: {pw["username"]} ')
+    
     
 def search():
     search_key = input("Which web/app pw do you want to search? ").lower()
@@ -81,6 +109,7 @@ def search():
 
     if not found:
         print("Password not found") 
+
 
 def edit():
     
@@ -135,6 +164,7 @@ def delete():
         except ValueError:
             print("\nEnter number")
 
+
 def load_key():
     if os.path.exists("key.key"):
         with open("key.key", "rb") as f:
@@ -159,23 +189,7 @@ def decrypt_password(encrypted_password):
     decrypted_password = fer.decrypt(encrypted_password.encode()).decode()
     return decrypted_password
 
-def pw_strength_checker(password):
-    
-    special_chars = string.punctuation
-    has_uppercase = any(char.isupper() for char in password)
-    has_lowercase  = any (char.islower() for char in password)
-    has_digit = any(char.isdigit() for char in password) 
-    has_symbol = any(char in special_chars for char in password)
-    has_min_length = len(password) >= 10
-    rules = [has_uppercase,has_lowercase,has_digit,has_symbol, has_min_length]
-    
-    score = sum(rules)
-    if all(rules):
-        print("Strong Password")
-    elif score >= 3:
-        print ("Moderate Password")
-    else:
-        print("Weak Password")
+
     
 while True:
     try:
