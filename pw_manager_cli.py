@@ -59,23 +59,28 @@ def pw_strength_checker(password):
 def add():
     website = input("Website / App: ")
     duplicate = False
+    stop_loop = False
     for pw in pws:
         if website.lower() in pw["website"].lower():
             duplicate = True
             print (f"Password for {website} already exists. What do you want to do?")
             while True:
                 try:
-                    choice = int(input("\n1.Update the existing password.\n2.Add it anyway"))
+                    choice = int(input("\n1.Update the existing password.\n2.Add it anyway "))
                     
                     if choice == 1:
                         edit()
-                        break
+                        return
                     elif choice == 2:
                         duplicate = False
+                        stop_loop = True
                         break
-                    
+                        
                 except ValueError:
                     print("Enter valid choice ")
+                    
+        if stop_loop:
+            break
                 
     if not duplicate:
         username = input("Username: ")
