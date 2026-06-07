@@ -3,7 +3,7 @@ from getpass import getpass
 import json
 import os 
 import string
-import random
+import secrets
 from cryptography.fernet import Fernet
 
 pws = []
@@ -26,7 +26,7 @@ def pw_generator(length = 10):
     characters = (string.ascii_letters + string.punctuation + string.digits)
     password = ""
     for _ in range(length):
-        password += random.choice(characters)
+        password += secrets.choice(characters)
     print(f"Generated pw is {password}")
     return password
 
