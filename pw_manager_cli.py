@@ -58,28 +58,44 @@ def pw_strength_checker(password):
 
 def add():
     website = input("Website / App: ")
-    username = input("Username: ")
-    while True:
-        choice = input("Do you want to generate password instead of typing yourself?(y/n): ")
-        
-        if choice.lower() == "y":
-            password = pw_generator()
-            break
-        elif choice.lower() == "n":
-            password = getpass("Password:")
-            password = pw_strength_checker(password)
+    duplicate = False
+    for pw in pws:
+        if website.lower() in pw["website"].lower():
+            duplicate = True
+            print (f"Password for {website} already exists. What do you want to do?")
+            choice = int(input("\n1.Update the existing password.\n2.Add it anyway"))
             
-            break
-        else:
-            print("Please enter y or n")
-    pw = {
-        "website": website,
-        "username": username,
-        "password": encrypt_password(password)
-    }
-    
-    pws.append(pw)
-    dump_pws()
+            if choice == 1:
+                edit()
+                
+            elif choice == 2:
+                duplicate = False
+                break
+            
+    if not duplicate:
+        username = input("Username: ")
+        while True:
+            choice = input("Do you want to generate password instead of typing yourself?(y/n): ")
+            
+            if choice.lower() == "y":
+                password = pw_generator()
+                break
+            elif choice.lower() == "n":
+                password = getpass("Password:")
+                password = pw_strength_checker(password)
+                
+                break
+            else:
+                print("Please enter y or n")
+        pw = {
+            "website": website,
+            "username": username,
+            "password": encrypt_password(password)
+        }
+        
+        pws.append(pw)
+        dump_pws()
+
 
 
 def view():
