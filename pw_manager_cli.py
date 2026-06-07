@@ -63,15 +63,20 @@ def add():
         if website.lower() in pw["website"].lower():
             duplicate = True
             print (f"Password for {website} already exists. What do you want to do?")
-            choice = int(input("\n1.Update the existing password.\n2.Add it anyway"))
-            
-            if choice == 1:
-                edit()
+            while True:
+                try:
+                    choice = int(input("\n1.Update the existing password.\n2.Add it anyway"))
+                    
+                    if choice == 1:
+                        edit()
+                        break
+                    elif choice == 2:
+                        duplicate = False
+                        break
+                    
+                except ValueError:
+                    print("Enter valid choice ")
                 
-            elif choice == 2:
-                duplicate = False
-                break
-            
     if not duplicate:
         username = input("Username: ")
         while True:
@@ -141,7 +146,7 @@ def edit():
                 print("Press enter if you don't want to update")
                 new_website = input(f"Website(Current:{pw['website']}): ")
                 new_username = input(f"Username(Current:{pw['username']}): ")
-                new_password = input(f"Password: ")
+                new_password = getpass("Password: ")
                 
                 if new_website :
                     pw["website"] = new_website
@@ -150,6 +155,7 @@ def edit():
                     pw["username"] = new_username
                     
                 if new_password :
+                    new_password = pw_strength_checker(new_password)
                     pw["password"] = encrypt_password(new_password)
            
                 dump_pws()
