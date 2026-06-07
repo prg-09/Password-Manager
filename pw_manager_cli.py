@@ -54,7 +54,6 @@ def add():
     
     pws.append(pw)
     dump_pws()
-    return password
 
 def view():
    
@@ -161,24 +160,22 @@ def decrypt_password(encrypted_password):
     return decrypted_password
 
 def pw_strength_checker(password):
+    
     special_chars = string.punctuation
     has_uppercase = any(char.isupper() for char in password)
     has_lowercase  = any (char.islower() for char in password)
     has_digit = any(char.isdigit() for char in password) 
     has_symbol = any(char in special_chars for char in password)
-    rules = [has_uppercase,has_lowercase,has_digit,has_symbol]
+    has_min_length = len(password) >= 10
+    rules = [has_uppercase,has_lowercase,has_digit,has_symbol, has_min_length]
+    
     score = sum(rules)
     if all(rules):
         print("Strong Password")
-    elif (score == 3):
+    elif score >= 3:
         print ("Moderate Password")
-    elif (score == 2):
-        print ("Weak Password")
     else:
-        print("Very weak Password")
-        
-            
-            
+        print("Weak Password")
     
 while True:
     try:
